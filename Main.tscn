@@ -31,3 +31,7 @@ margin_min = Vector2(1000, 1000)
 margin_max = Vector2(4000, 4000)
 zoom_speed = 20.0
 move_speed = 50.0
+focus_hold_duration = 1.2
+focus_speed_multiplier = 2.0
+focus_zoom_speed_multiplier = 2.0
+debug_random_radius = 20000.0
