@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://cms7du8f7hmxx"]
+
+[ext_resource type="Script" uid="uid://0hqx6fbk7y3w" path="res://ShipController.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://btihrgll01w1l" path="res://sprites/SpaceShipSamples/Z8FreedomFighter_Blade_110x110.png" id="2_sprite"]
+[ext_resource type="Script" uid="uid://07sfr53ws4vv" path="res://components/HealthComponent.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://uwg3ipyll245" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
+[ext_resource type="Script" uid="uid://dawjyppfnb083" path="res://abilities/FighterAttackAbility.gd" id="5_attack"]
+[ext_resource type="Script" uid="uid://dlh10q28vshkl" path="res://abilities/FighterDashAbility.gd" id="6_dash"]
+[ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 40.0
+
+[node name="FighterShip" type="CharacterBody2D" node_paths=PackedStringArray("primary_ability", "secondary_ability")]
+collision_mask = 4
+script = ExtResource("1_script")
+joystick_side = 1
+max_speed = 1200.0
+acceleration = 5000.0
+friction = 600.0
+auto_aim_enabled = true
+show_debug_draw = true
+primary_ability = NodePath("FighterAttackAbility")
+secondary_ability = NodePath("FighterDashAbility")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("2_sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_health")
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_hurtbox")
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_1")
+
+[node name="FighterAttackAbility" type="Node" parent="."]
+script = ExtResource("5_attack")
+projectile_scene = ExtResource("7_proj")
+projectile_speed = 10000.0
+
+[node name="FighterDashAbility" type="Node" parent="."]
+script = ExtResource("6_dash")

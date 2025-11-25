@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8x7y605w4v3"]
+[gd_scene load_steps=4 format=3 uid="uid://cvakwfv0le4r6"]
 
 [ext_resource type="Script" uid="uid://0hqx6fbk7y3w" path="res://ShipController.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dua442crtwq08" path="res://icon.svg" id="2_icon"]

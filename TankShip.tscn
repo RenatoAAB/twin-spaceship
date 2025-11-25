@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://bayj8cfn400la"]
+
+[ext_resource type="Script" uid="uid://0hqx6fbk7y3w" path="res://ShipController.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c4f8lj3o5oacq" path="res://sprites/SpaceShipSamples/Starship_A_96x120.png" id="2_sprite"]
+[ext_resource type="Script" uid="uid://07sfr53ws4vv" path="res://components/HealthComponent.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://uwg3ipyll245" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
+[ext_resource type="Script" uid="uid://buctqh1o45htq" path="res://abilities/SlowAttackAbility.gd" id="5_attack"]
+[ext_resource type="Script" uid="uid://bvi0scxi8kmq4" path="res://abilities/SlowShieldAbility.gd" id="6_shield"]
+[ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 50.0
+
+[node name="TankShip" type="CharacterBody2D" node_paths=PackedStringArray("primary_ability", "secondary_ability")]
+collision_mask = 4
+script = ExtResource("1_script")
+max_speed = 500.0
+acceleration = 300.0
+friction = 100.0
+rotation_speed = 2.0
+primary_ability = NodePath("SlowAttackAbility")
+secondary_ability = NodePath("SlowShieldAbility")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("2_sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_health")
+max_health = 200.0
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_hurtbox")
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_1")
+
+[node name="SlowAttackAbility" type="Node" parent="."]
+script = ExtResource("5_attack")
+projectile_scene = ExtResource("7_proj")
+
+[node name="SlowShieldAbility" type="Node" parent="."]
+script = ExtResource("6_shield")

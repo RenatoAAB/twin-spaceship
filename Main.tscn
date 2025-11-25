@@ -1,33 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://d28stjdrtednr"]
+[gd_scene load_steps=5 format=3 uid="uid://d28stjdrtednr"]
 
-[ext_resource type="PackedScene" path="res://Ship.tscn" id="1_ship"]
 [ext_resource type="Script" uid="uid://cq4vfuumalhmy" path="res://CameraController.gd" id="2_camera"]
+[ext_resource type="PackedScene" uid="uid://bayj8cfn400la" path="res://TankShip.tscn" id="2_r0du0"]
+[ext_resource type="PackedScene" uid="uid://cms7du8f7hmxx" path="res://FighterShip.tscn" id="3_cm0pq"]
+[ext_resource type="PackedScene" path="res://entities/EnemySpawner.tscn" id="4_cm0pq"]
 
 [node name="Main" type="Node2D"]
 
-[node name="FreighterShip" parent="." instance=ExtResource("1_ship")]
-position = Vector2(300, 300)
-collision_mask = 14
-max_speed = 500.0
-acceleration = 300.0
-friction = 100.0
-rotation_speed = 2.0
-
-[node name="SpeedShip" parent="." instance=ExtResource("1_ship")]
-position = Vector2(800, 300)
-collision_mask = 14
-motion_mode = 1
-joystick_side = 1
-max_speed = 1200.0
-acceleration = 5000.0
-friction = 600.0
-
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("2_camera")
-target_paths = Array[NodePath]([NodePath("../FreighterShip"), NodePath("../SpeedShip")])
+target_paths = Array[NodePath]([NodePath("../TankShip"), NodePath("../FighterShip")])
 min_zoom = 0.05
-max_zoom = 1.0
-margin_min = Vector2(1000, 1000)
+max_zoom = 10.0
+margin_min = Vector2(500, 500)
 margin_max = Vector2(4000, 4000)
 zoom_speed = 20.0
 move_speed = 50.0
@@ -35,3 +20,12 @@ focus_hold_duration = 1.2
 focus_speed_multiplier = 2.0
 focus_zoom_speed_multiplier = 2.0
 debug_random_radius = 20000.0
+
+[node name="TankShip" parent="." instance=ExtResource("2_r0du0")]
+position = Vector2(74, 181)
+
+[node name="FighterShip" parent="." instance=ExtResource("3_cm0pq")]
+position = Vector2(693, 177)
+
+[node name="EnemySpawner" parent="." instance=ExtResource("4_cm0pq")]
+position = Vector2(397, 480)
