@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://d28stjdrtednr"]
+[gd_scene load_steps=6 format=3 uid="uid://d28stjdrtednr"]
 
 [ext_resource type="Script" uid="uid://cq4vfuumalhmy" path="res://CameraController.gd" id="2_camera"]
 [ext_resource type="PackedScene" uid="uid://bayj8cfn400la" path="res://TankShip.tscn" id="2_r0du0"]
 [ext_resource type="PackedScene" uid="uid://cms7du8f7hmxx" path="res://FighterShip.tscn" id="3_cm0pq"]
 [ext_resource type="PackedScene" path="res://entities/EnemySpawner.tscn" id="4_cm0pq"]
+[ext_resource type="PackedScene" path="res://components/StarfieldBackground.tscn" id="5_fos0i"]
 
 [node name="Main" type="Node2D"]
 
@@ -29,3 +30,5 @@ position = Vector2(693, 177)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("4_cm0pq")]
 position = Vector2(397, 480)
+
+[node name="StarfieldLayer" parent="." instance=ExtResource("5_fos0i")]

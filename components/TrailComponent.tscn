@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://components/TrailComponent.gd" id="1_script"]
+[ext_resource type="Shader" path="res://shaders/Trail.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/trail_color = Color(0, 0.8, 1, 1)
+shader_parameter/turbulence_strength = 0.2
+
+[node name="TrailComponent" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Line2D" type="Line2D" parent="."]
+material = SubResource("ShaderMaterial_1")
+width = 20.0
+default_color = Color(0, 0.8, 1, 1)
+texture_mode = 2
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2

@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://dawjyppfnb083" path="res://abilities/FighterAttackAbility.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://dlh10q28vshkl" path="res://abilities/FighterDashAbility.gd" id="6_dash"]
 [ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
+[ext_resource type="PackedScene" path="res://components/TrailComponent.tscn" id="8_trail"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 40.0
@@ -49,3 +50,9 @@ projectile_speed = 10000.0
 
 [node name="FighterDashAbility" type="Node" parent="."]
 script = ExtResource("6_dash")
+
+[node name="TrailComponent" parent="." instance=ExtResource("8_trail")]
+position = Vector2(-40, 0)
+length_seconds = 0.3
+width = 30.0
+trail_color = Color(0, 0.8, 1, 1)

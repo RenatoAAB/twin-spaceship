@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://buctqh1o45htq" path="res://abilities/SlowAttackAbility.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://bvi0scxi8kmq4" path="res://abilities/SlowShieldAbility.gd" id="6_shield"]
 [ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
+[ext_resource type="PackedScene" path="res://components/TrailComponent.tscn" id="8_trail"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 50.0
@@ -47,3 +48,9 @@ projectile_scene = ExtResource("7_proj")
 
 [node name="SlowShieldAbility" type="Node" parent="."]
 script = ExtResource("6_shield")
+
+[node name="TrailComponent" parent="." instance=ExtResource("8_trail")]
+position = Vector2(-50, 0)
+length_seconds = 0.5
+width = 40.0
+trail_color = Color(1, 0.5, 0, 1)
