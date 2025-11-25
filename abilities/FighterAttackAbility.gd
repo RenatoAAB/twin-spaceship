@@ -1,6 +1,8 @@
 extends Ability
 class_name FighterAttackAbility
 
+signal projectile_fired
+
 @export var projectile_scene: PackedScene
 @export var fire_rate: float = 0.1
 @export var projectile_speed: float = 1000.0
@@ -41,3 +43,5 @@ func _fire() -> void:
 		proj.direction = direction
 		proj.rotation = direction.angle()
 		proj.speed = projectile_speed
+		
+		projectile_fired.emit()

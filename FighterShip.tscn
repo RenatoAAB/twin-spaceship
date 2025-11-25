@@ -1,18 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://cms7du8f7hmxx"]
+[gd_scene load_steps=16 format=3 uid="uid://cms7du8f7hmxx"]
 
 [ext_resource type="Script" uid="uid://0hqx6fbk7y3w" path="res://ShipController.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://btihrgll01w1l" path="res://sprites/SpaceShipSamples/Z8FreedomFighter_Blade_110x110.png" id="2_sprite"]
+[ext_resource type="Texture2D" uid="uid://cvv7ttjbvfwqi" path="res://sprites/naveCaca.png" id="2_utwt4"]
 [ext_resource type="Script" uid="uid://07sfr53ws4vv" path="res://components/HealthComponent.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://uwg3ipyll245" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
 [ext_resource type="Script" uid="uid://dawjyppfnb083" path="res://abilities/FighterAttackAbility.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://dlh10q28vshkl" path="res://abilities/FighterDashAbility.gd" id="6_dash"]
-[ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
+[ext_resource type="PackedScene" uid="uid://preoguwuvp7q" path="res://entities/Projectile.tscn" id="7_proj"]
 [ext_resource type="PackedScene" path="res://components/TrailComponent.tscn" id="8_trail"]
+[ext_resource type="Script" uid="uid://bgxa0gd0xlxef" path="res://components/SoundComponent.gd" id="9_sound"]
+[ext_resource type="AudioStream" uid="uid://bvkbkep43s8m2" path="res://audio/laserShoot.wav" id="10_ft3re"]
+[ext_resource type="Script" uid="uid://ficj38cx3cep" path="res://components/ParticleSpawnerComponent.gd" id="10_particle"]
+[ext_resource type="Script" uid="uid://dm5r4ghih37qv" path="res://components/FeedbackComponent.gd" id="11_feedback"]
+[ext_resource type="PackedScene" uid="uid://cnbuvsa5tyr3o" path="res://ui/HealthBar.tscn" id="12_healthbar"]
+[ext_resource type="Script" uid="uid://dqhtqnr4oexar" path="res://components/BeatPulseComponent.gd" id="13_beatpulse"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 40.0
 
 [node name="FighterShip" type="CharacterBody2D" node_paths=PackedStringArray("primary_ability", "secondary_ability")]
+modulate = Color(0, 1, 1, 1)
+self_modulate = Color(1.0259275, 0.87455684, 1.353256, 1)
 collision_mask = 4
 script = ExtResource("1_script")
 joystick_side = 1
@@ -20,13 +28,14 @@ max_speed = 1200.0
 acceleration = 5000.0
 friction = 600.0
 auto_aim_enabled = true
+auto_aim_radius = 2000.0
 show_debug_draw = true
 primary_ability = NodePath("FighterAttackAbility")
 secondary_ability = NodePath("FighterDashAbility")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 1.5708
-texture = ExtResource("2_sprite")
+position = Vector2(21, 13)
+texture = ExtResource("2_utwt4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1")
@@ -55,4 +64,28 @@ script = ExtResource("6_dash")
 position = Vector2(-40, 0)
 length_seconds = 0.3
 width = 30.0
-trail_color = Color(0, 0.8, 1, 1)
+
+[node name="SoundComponent" type="Node" parent="."]
+script = ExtResource("9_sound")
+projectile_sound = ExtResource("10_ft3re")
+quantize = true
+quantize_subdivision = 1
+
+[node name="ParticleSpawnerComponent" type="Node" parent="."]
+script = ExtResource("10_particle")
+
+[node name="FeedbackComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("11_feedback")
+sprite = NodePath("../Sprite2D")
+
+[node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("12_healthbar")]
+offset_left = -50.0
+offset_top = -60.0
+offset_right = 50.0
+offset_bottom = -40.0
+health_component = NodePath("../HealthComponent")
+
+[node name="BeatPulseComponent" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("13_beatpulse")
+target = NodePath("../Sprite2D")
+pulse_scale = 1.05

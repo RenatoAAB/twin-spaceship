@@ -1,20 +1,28 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://preoguwuvp7q"]
 
-[ext_resource type="Script" path="res://entities/Projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://sprites/SpaceShipSamples/Flash_A_71x75.png" id="2_sprite"]
+[ext_resource type="Script" uid="uid://buh2p3x8hxphc" path="res://entities/Projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://ch4h6ib2d018a" path="res://sprites/projetil.png" id="2_41r0v"]
+[ext_resource type="Script" path="res://components/SoundComponent.gd" id="3_sound"]
+[ext_resource type="Script" path="res://components/ParticleSpawnerComponent.gd" id="4_particle"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
-radius = 15.0
-height = 60.0
+radius = 13.999992
+height = 66.00001
 
 [node name="Projectile" type="Area2D"]
+modulate = Color(0.9019608, 0.73333335, 1, 1)
 script = ExtResource("1_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 1.5708
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_sprite")
+position = Vector2(2, 18)
+texture = ExtResource("2_41r0v")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_1")
+
+[node name="SoundComponent" type="Node" parent="."]
+script = ExtResource("3_sound")
+
+[node name="ParticleSpawnerComponent" type="Node" parent="."]
+script = ExtResource("4_particle")

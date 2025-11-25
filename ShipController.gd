@@ -24,6 +24,11 @@ enum JoystickSide {
 @export var primary_ability: Ability
 @export var secondary_ability: Ability
 
+# Components
+var sound_component: SoundComponent
+var particle_component: ParticleSpawnerComponent
+var feedback_component: FeedbackComponent
+
 # Dash state
 var is_dashing: bool = false
 var dash_time_left: float = 0.0
@@ -36,6 +41,29 @@ var shield_health: float = 0.0
 # Input state tracking
 var _was_primary_pressed: bool = false
 var _was_secondary_pressed: bool = false
+
+func _ready() -> void:
+	add_to_group("players")
+	
+	# Try to find components
+	sound_component = get_node_or_null("SoundComponent")
+	particle_component = get_node_or_null("ParticleSpawnerComponent")
+	feedback_component = get_node_or_null("FeedbackComponent")
+	
+	var health_comp = get_node_or_null("HealthComponent")
+	if health_comp:
+		health_comp.health_changed.connect(_on_health_changed)
+		health_comp.died.connect(_on_died)
+	
+	# Connect to ability signals for projectile sounds
+	if primary_ability and primary_ability.has_signal("projectile_fired"):
+		primary_ability.projectile_fired.connect(_on_projectile_fired)
+	if secondary_ability and secondary_ability.has_signal("projectile_fired"):
+		secondary_ability.projectile_fired.connect(_on_projectile_fired)
+
+func _on_projectile_fired() -> void:
+	if sound_component:
+		sound_component.play_projectile()
 
 func _physics_process(delta: float) -> void:
 	if show_debug_draw:
@@ -56,9 +84,13 @@ func _process_movement(delta: float) -> void:
 	if input_vector != Vector2.ZERO:
 		# Aplica aceleração na direção do input
 		velocity = velocity.move_toward(input_vector * max_speed, acceleration * delta)
+		if sound_component and not sound_component.move_sound_playing(): # Need to implement this check or just play loop
+			sound_component.play_move()
 	else:
 		# Aplica fricção para parar a nave quando não há input
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+		if sound_component:
+			sound_component.stop_move()
 
 func _process_rotation(delta: float) -> void:
 	var target_angle = rotation # Default to current
@@ -126,6 +158,7 @@ func _process_abilities() -> void:
 	if primary_ability:
 		if primary_down and not _was_primary_pressed:
 			primary_ability.activate()
+			if sound_component: sound_component.play_ability_1()
 		elif not primary_down and _was_primary_pressed:
 			primary_ability.deactivate()
 			
@@ -133,6 +166,7 @@ func _process_abilities() -> void:
 	if secondary_ability:
 		if secondary_down and not _was_secondary_pressed:
 			secondary_ability.activate()
+			if sound_component: sound_component.play_ability_2()
 		elif not secondary_down and _was_secondary_pressed:
 			secondary_ability.deactivate()
 			
@@ -188,5 +222,15 @@ func intercept_damage(amount: float) -> float:
 			deactivate_shield()
 	return amount
 
-func _ready() -> void:
-	add_to_group("players")
+func _on_health_changed(_current: float, _max_val: float) -> void:
+	if feedback_component:
+		feedback_component.play_damage_feedback()
+	if sound_component:
+		sound_component.play_hit()
+
+func _on_died() -> void:
+	if sound_component:
+		sound_component.play_destroy()
+	if particle_component:
+		particle_component.spawn_destroy(global_position)
+	queue_free()

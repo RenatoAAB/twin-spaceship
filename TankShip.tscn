@@ -1,18 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://bayj8cfn400la"]
+[gd_scene load_steps=11 format=3 uid="uid://bayj8cfn400la"]
 
 [ext_resource type="Script" uid="uid://0hqx6fbk7y3w" path="res://ShipController.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://c4f8lj3o5oacq" path="res://sprites/SpaceShipSamples/Starship_A_96x120.png" id="2_sprite"]
+[ext_resource type="Texture2D" uid="uid://dex00pikuiuwl" path="res://sprites/naveGoida.png" id="2_r23at"]
 [ext_resource type="Script" uid="uid://07sfr53ws4vv" path="res://components/HealthComponent.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://uwg3ipyll245" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
 [ext_resource type="Script" uid="uid://buctqh1o45htq" path="res://abilities/SlowAttackAbility.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://bvi0scxi8kmq4" path="res://abilities/SlowShieldAbility.gd" id="6_shield"]
 [ext_resource type="PackedScene" path="res://entities/Projectile.tscn" id="7_proj"]
 [ext_resource type="PackedScene" path="res://components/TrailComponent.tscn" id="8_trail"]
+[ext_resource type="Script" path="res://components/SoundComponent.gd" id="9_sound"]
+[ext_resource type="Script" path="res://components/ParticleSpawnerComponent.gd" id="10_particle"]
+[ext_resource type="Script" path="res://components/FeedbackComponent.gd" id="11_feedback"]
+[ext_resource type="PackedScene" path="res://ui/HealthBar.tscn" id="12_healthbar"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 50.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6cd5"]
+size = Vector2(303, 153)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r23at"]
+size = Vector2(305, 153)
 
 [node name="TankShip" type="CharacterBody2D" node_paths=PackedStringArray("primary_ability", "secondary_ability")]
+modulate = Color(1, 0.63529414, 0, 1)
 collision_mask = 4
 script = ExtResource("1_script")
 max_speed = 500.0
@@ -23,24 +31,27 @@ primary_ability = NodePath("SlowAttackAbility")
 secondary_ability = NodePath("SlowShieldAbility")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 1.5708
-texture = ExtResource("2_sprite")
+position = Vector2(47, 17)
+texture = ExtResource("2_r23at")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_1")
+position = Vector2(56.5, 1.5)
+shape = SubResource("RectangleShape2D_b6cd5")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("3_health")
 max_health = 200.0
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+position = Vector2(75, 0)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("4_hurtbox")
 health_component = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
-shape = SubResource("CircleShape2D_1")
+position = Vector2(-18.5, -0.5)
+shape = SubResource("RectangleShape2D_r23at")
 
 [node name="SlowAttackAbility" type="Node" parent="."]
 script = ExtResource("5_attack")
@@ -50,7 +61,24 @@ projectile_scene = ExtResource("7_proj")
 script = ExtResource("6_shield")
 
 [node name="TrailComponent" parent="." instance=ExtResource("8_trail")]
-position = Vector2(-50, 0)
+position = Vector2(-102, 0)
 length_seconds = 0.5
 width = 40.0
 trail_color = Color(1, 0.5, 0, 1)
+
+[node name="SoundComponent" type="Node" parent="."]
+script = ExtResource("9_sound")
+
+[node name="ParticleSpawnerComponent" type="Node" parent="."]
+script = ExtResource("10_particle")
+
+[node name="FeedbackComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("11_feedback")
+sprite = NodePath("../Sprite2D")
+
+[node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("12_healthbar")]
+offset_left = -50.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = -80.0
+health_component = NodePath("../HealthComponent")

@@ -6,8 +6,13 @@ class_name Projectile
 @export var lifetime: float = 2.0
 
 var direction: Vector2 = Vector2.RIGHT
+var sound_component: SoundComponent
+var particle_component: ParticleSpawnerComponent
 
 func _ready() -> void:
+	sound_component = get_node_or_null("SoundComponent")
+	particle_component = get_node_or_null("ParticleSpawnerComponent")
+	
 	# Ensure we hit world (1) and enemies (4)
 	collision_mask = 5 
 	
@@ -29,7 +34,7 @@ func _on_area_entered(area: Area2D) -> void:
 			return
 			
 		area.take_damage(damage)
-		queue_free()
+		_destroy()
 
 func _on_body_entered(body: Node) -> void:
 	# Don't destroy on player contact (spawn point)
@@ -37,4 +42,11 @@ func _on_body_entered(body: Node) -> void:
 		return
 		
 	# Destroy on hitting walls etc
+	_destroy()
+
+func _destroy() -> void:
+	if sound_component:
+		sound_component.play_hit() # Or destroy sound
+	if particle_component:
+		particle_component.spawn_hit(global_position, -direction)
 	queue_free()

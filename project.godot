@@ -15,6 +15,11 @@ run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+AudioManager="*res://autoloads/AudioManager.gd"
+MusicController="*res://autoloads/MusicController.gd"
+
 [display]
 
 window/size/viewport_width=1920

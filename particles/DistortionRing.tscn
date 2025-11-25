@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://distortionring123"]
+
+[ext_resource type="Shader" path="res://shaders/Distortion.gdshader" id="1_shader"]
+[ext_resource type="Script" path="res://particles/DistortionRing.gd" id="2_script"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
+shader = ExtResource("1_shader")
+shader_parameter/strength = 0.05
+shader_parameter/size = 0.0
+shader_parameter/thickness = 0.1
+
+[node name="DistortionRing" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_1")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2

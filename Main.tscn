@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bayj8cfn400la" path="res://TankShip.tscn" id="2_r0du0"]
 [ext_resource type="PackedScene" uid="uid://cms7du8f7hmxx" path="res://FighterShip.tscn" id="3_cm0pq"]
 [ext_resource type="PackedScene" path="res://entities/EnemySpawner.tscn" id="4_cm0pq"]
-[ext_resource type="PackedScene" path="res://components/StarfieldBackground.tscn" id="5_fos0i"]
+[ext_resource type="PackedScene" uid="uid://k2ho1aij6cxq" path="res://components/StarfieldBackground.tscn" id="5_fos0i"]
 
 [node name="Main" type="Node2D"]
 
@@ -26,6 +26,7 @@ debug_random_radius = 20000.0
 position = Vector2(74, 181)
 
 [node name="FighterShip" parent="." instance=ExtResource("3_cm0pq")]
+modulate = Color(0, 1.8247963, 1.8247963, 1)
 position = Vector2(693, 177)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("4_cm0pq")]

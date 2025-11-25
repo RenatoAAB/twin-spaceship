@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dh5vj3i4ro587"]
+
+[ext_resource type="Script" path="res://components/BeatPulseComponent.gd" id="1_script"]
+
+[node name="BeatPulseComponent" type="Node"]
+script = ExtResource("1_script")
+pulse_scale = 1.1
+pulse_duration = 0.1
+pulse_on_beat = true
+pulse_on_bar = false

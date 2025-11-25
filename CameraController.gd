@@ -38,6 +38,10 @@ var _debug_last_base_bounds: Rect2 = Rect2()
 var _debug_last_focus_bounds: Rect2 = Rect2()
 var _debug_has_focus_bounds: bool = false
 
+# Shake variables
+var _shake_strength: float = 0.0
+var _shake_decay: float = 5.0
+
 func _ready() -> void:
 	_rng.randomize()
 
@@ -63,6 +67,8 @@ func _process(delta: float) -> void:
 
 	position = position.lerp(target_pos, move_lerp)
 	zoom = zoom.lerp(Vector2(target_zoom, target_zoom), zoom_lerp)
+	
+	_process_shake(delta)
 
 	_advance_focus_state(delta)
 
@@ -226,3 +232,18 @@ func _draw_rect_world(rect: Rect2, color: Color) -> void:
 	var top_left = to_local(rect.position)
 	var bottom_right = to_local(rect.position + rect.size)
 	draw_rect(Rect2(top_left, bottom_right - top_left), color, false, 2.0)
+
+func shake(strength: float, duration: float = 0.5) -> void:
+	_shake_strength = max(_shake_strength, strength)
+	# Simple decay approximation based on duration if needed, 
+	# but here we just set strength and let process handle decay
+	
+func _process_shake(delta: float) -> void:
+	if _shake_strength > 0:
+		_shake_strength = move_toward(_shake_strength, 0, _shake_decay * delta * 10.0) # Decay faster
+		offset = Vector2(
+			_rng.randf_range(-_shake_strength, _shake_strength),
+			_rng.randf_range(-_shake_strength, _shake_strength)
+		)
+	else:
+		offset = Vector2.ZERO

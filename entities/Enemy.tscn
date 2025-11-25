@@ -1,22 +1,29 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7fstdbcr7yq1"]
+[gd_scene load_steps=9 format=3 uid="uid://b7fstdbcr7yq1"]
 
 [ext_resource type="Script" uid="uid://bivxv5gbg1hey" path="res://entities/Enemy.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://s13ktrrecii6" path="res://sprites/SpaceShipSamples/Bug_NightmareWoodLouse_80x80.png" id="2_sprite"]
+[ext_resource type="Texture2D" uid="uid://cf7ca2l632o48" path="res://sprites/inimigo.png" id="2_vec32"]
 [ext_resource type="Script" uid="uid://07sfr53ws4vv" path="res://components/HealthComponent.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://uwg3ipyll245" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
+[ext_resource type="Script" path="res://components/SoundComponent.gd" id="5_sound"]
+[ext_resource type="Script" path="res://components/ParticleSpawnerComponent.gd" id="6_particle"]
+[ext_resource type="Script" path="res://components/FeedbackComponent.gd" id="7_feedback"]
+[ext_resource type="PackedScene" path="res://particles/DistortionRing.tscn" id="8_distortion"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 30.0
+radius = 43.011627
 
 [node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("health_component")]
+modulate = Color(1, 0, 0, 1)
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_script")
 health_component = NodePath("HealthComponent")
+death_distortion_scene = ExtResource("8_distortion")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 1.5708
-texture = ExtResource("2_sprite")
+position = Vector2(2, 19)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_vec32")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1")
@@ -33,3 +40,13 @@ health_component = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
 shape = SubResource("CircleShape2D_1")
+
+[node name="SoundComponent" type="Node" parent="."]
+script = ExtResource("5_sound")
+
+[node name="ParticleSpawnerComponent" type="Node" parent="."]
+script = ExtResource("6_particle")
+
+[node name="FeedbackComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("7_feedback")
+sprite = NodePath("../Sprite2D")

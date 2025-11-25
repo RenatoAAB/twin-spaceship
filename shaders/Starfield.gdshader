@@ -38,46 +38,62 @@ void fragment() {
         vec2 id = floor(grid_uv);
         vec2 f = fract(grid_uv);
         
-        // Random value for this grid cell
-        float r = random(id);
-        
-        // Determine if a star exists in this cell
-        // Higher i (farther) -> allow more density? Or less?
-        // Usually background has more tiny stars.
-        if (r < density) {
-            // Random position within the cell
-            vec2 pos = vec2(random(id + vec2(1.0)), random(id + vec2(2.0)));
-            
-            // Distance from pixel to star center
-            float dist = length(f - pos);
-            
-            // Star shape (glow)
-            // Closer stars (low i) should be bigger/brighter
-            float glow_radius = 0.02 * (1.0 / sqrt(i)); 
-            float brightness = glow_radius / dist;
-            
-            // Soft edge
-            brightness = pow(brightness, 1.5);
-            
-            // Twinkle effect
-            // Use a separate random value for twinkle characteristics
-            float twinkle_speed = random(id + vec2(3.0)) * 3.0 + 0.5; // Random speed
-            float twinkle_offset = random(id + vec2(4.0)) * 10.0; // Random phase
-            
-            // Only some stars twinkle significantly
-            float twinkle_amount = 0.0;
-            if (random(id + vec2(6.0)) > 0.7) { // 30% chance to twinkle
-                 twinkle_amount = 0.5;
+        // Check neighbor cells to avoid clipping at edges
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                vec2 neighbor = vec2(float(x), float(y));
+                vec2 neighbor_id = id + neighbor;
+                
+                // Random value for this grid cell
+                float r = random(neighbor_id);
+                
+                // Determine if a star exists in this cell
+                if (r < density) {
+                    // Random position within the cell
+                    vec2 pos = vec2(random(neighbor_id + vec2(1.0)), random(neighbor_id + vec2(2.0)));
+                    
+                    // Distance from pixel to star center
+                    // Star position relative to current cell ID is neighbor + pos
+                    // Pixel position relative to current cell ID is f
+                    vec2 diff = neighbor + pos - f;
+                    float dist = length(diff);
+                    
+                    // Star shape (glow)
+                    // Closer stars (low i) should be bigger/brighter
+                    float glow_radius = 0.02 * (1.0 / sqrt(i)); 
+                    
+                    // Use a non-singular falloff or clamp the maximum brightness to avoid HDR artifacts
+                    // Old formula: float brightness = glow_radius / max(dist, 0.0001);
+                    // New formula: Soft falloff that doesn't explode to infinity
+                    float brightness = glow_radius / (dist + 0.005);
+                    
+                    // Soft edge
+                    brightness = pow(brightness, 1.5);
+                    
+                    // Clamp brightness to a reasonable HDR maximum (e.g. 5.0) to prevent blinding bloom
+                    brightness = min(brightness, 5.0);
+                    
+                    // Twinkle effect
+                    // Use a separate random value for twinkle characteristics
+                    float twinkle_speed = random(neighbor_id + vec2(3.0)) * 3.0 + 0.5; // Random speed
+                    float twinkle_offset = random(neighbor_id + vec2(4.0)) * 10.0; // Random phase
+                    
+                    // Only some stars twinkle significantly
+                    float twinkle_amount = 0.0;
+                    if (random(neighbor_id + vec2(6.0)) > 0.7) { // 30% chance to twinkle
+                         twinkle_amount = 0.5;
+                    }
+                    
+                    float twinkle = 1.0 - (twinkle_amount * 0.5) + (twinkle_amount * 0.5 * sin(TIME * twinkle_speed + twinkle_offset));
+                    brightness *= twinkle;
+                    
+                    // Color variation (Blueish to White to Yellowish)
+                    vec3 star_color = mix(vec3(0.7, 0.8, 1.0), vec3(1.0, 0.9, 0.7), random(neighbor_id + vec2(5.0)));
+                    
+                    // Add to final color
+                    color += star_color * brightness;
+                }
             }
-            
-            float twinkle = 1.0 - (twinkle_amount * 0.5) + (twinkle_amount * 0.5 * sin(TIME * twinkle_speed + twinkle_offset));
-            brightness *= twinkle;
-            
-            // Color variation (Blueish to White to Yellowish)
-            vec3 star_color = mix(vec3(0.7, 0.8, 1.0), vec3(1.0, 0.9, 0.7), random(id + vec2(5.0)));
-            
-            // Add to final color
-            color += star_color * brightness;
         }
     }
     
